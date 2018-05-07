@@ -1,0 +1,16 @@
+Autores: Brian Leiva Cerna y Jaime Fernández Díaz
+Github: https://github.com/MBrianLC/Practica5/
+Commit:
+
+Mejoras respecto a P4:
+- Corregido el DirtTest
+- Eliminados comentarios innecesarios en los Test
+- Eliminadas pruebas de get y set
+- Mejorado el estilo en general: añadidos bloques {} en todos los if y for, arreglada la concatenación de try-catch e if-else,
+	eliminados super innecesarios, y se han quitado los '_' en las variables.
+- Cambio de nombre en los paquetes a simbojects y simobjects.advanced
+- SimObjects ahora se llama roadMap (en TrafficSimulator)
+- Uso de StringBuilder en los bucles de simobjects, en vez de String
+- Métodos estáticos en los Builders
+- Añadidos detalles a las excepciones de RoadMap
+- Quitados bloques try/catch de los test
