@@ -75,6 +75,7 @@ public class MainWindowSim extends JFrame implements Listener {
 	private JFileChooser fc;
 	private File currentFile;
 	private JSpinner stepsSpinner;
+	private JSpinner delaySpinner;
 	private JTextField timeViewer;
 	private JTextArea eventsEditor; // editor de eventos
 	private JTextArea reportsArea; // zona de informes
@@ -101,6 +102,8 @@ public class MainWindowSim extends JFrame implements Listener {
 			KeyEvent.VK_R, "control shift N", () -> resetSim());
 	private Action output = new SimulatorAction(Command.Output, null, "Redirect simulation's output to text area",
 			KeyEvent.VK_R, "control shift O", () -> redirectOutput());
+	private Action stop = new SimulatorAction(Command.Output, "stop.png", "Stops simulation",
+			KeyEvent.VK_R, "alt shift S", () -> stopSim());
 	
 	private static final Logger logger = Logger.getLogger(MainWindowSim.class.getName());
 	
@@ -129,7 +132,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		this.tsim.addSimulatorListener(tableSim);
 		this.tsim.addSimulatorListener(rmGraph);
 	}
-	
+
 	/** 
 	 * Inicia la interfaz.
 	*/
@@ -222,6 +225,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		simulatorMenu = new JMenu("Simulator");
 		menuBar.add(simulatorMenu);
 		simulatorMenu.add(run);
+		simulatorMenu.add(stop);
 		simulatorMenu.add(reset);
 		simulatorMenu.add(output);
 		
@@ -242,7 +246,17 @@ public class MainWindowSim extends JFrame implements Listener {
 		toolBar.add(save);
 		toolBar.add(checkIn);
 		toolBar.add(run);
+		toolBar.add(stop);
 		toolBar.add(reset);
+		
+		toolBar.add(new JLabel(" Delay: "));   
+		delaySpinner = new JSpinner(new SpinnerNumberModel(300, 1, 1000, 1));
+		delaySpinner.addChangeListener(new ChangeListener() {
+    		public void stateChanged(ChangeEvent e) {
+    	    	//contr.setDelay((int)delaySpinner.getValue());
+			}
+		});
+		toolBar.add(delaySpinner);
 		
 		toolBar.add(new JLabel(" Steps: "));   
 		stepsSpinner = new JSpinner(new SpinnerNumberModel(5, 1, 1000, 1));
@@ -423,6 +437,10 @@ public class MainWindowSim extends JFrame implements Listener {
 			logger.fine("Informes generados");
 		}
 		else statusBarText.setText("Operation cancelled");
+	}
+	
+	private void stopSim() {
+
 	}
 	
 	/** 
