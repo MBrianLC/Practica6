@@ -26,6 +26,7 @@ public class Controller {
 	private Ini ini;
 	private OutputStream out;
 	private int timeLimit;
+	private int delayTime;
 	
 	private static final Logger logger = Logger.getLogger(Controller.class.getName());
 	
@@ -42,40 +43,25 @@ public class Controller {
 		logger.info("Creando controller");
 	}
 	
-	/** 
-	 * Método set para ini.
-	 * @param ini : Nuevo texto en formato Ini
-	*/
-	
 	public void setIni (Ini ini){
 		logger.fine("Ini modificado");
 		this.ini = ini;
 	}
-	
-	/** 
-	 * Método set para timeLimit.
-	 * @param ini : Nuevo límite de tiempo
-	*/
 	
 	public void setTime (int timeLimit){
 		logger.fine("Tiempo modificado");
 		this.timeLimit = timeLimit;
 	}
 	
-	/** 
-	 * Método set para out.
-	 * @param out : Nuevo formato de salida
-	*/
+	public void setDelayTime (int delayTime){
+		logger.fine("Tiempo modificado");
+		this.delayTime = delayTime;
+	}
 	
 	public void setOutputStream (OutputStream out){
 		logger.fine("Salida de texto modificada");
 		this.out = out;
 	}
-	
-	/** 
-	 * Método get para timeLimit.
-	 * @return Límite de tiempo (pasos de simulación)
-	*/
 	
 	public int getTime (){
 		return timeLimit;
@@ -110,6 +96,6 @@ public class Controller {
 				System.exit(1);
 			}
 		}
-		sim.execute(timeLimit, out);
+		sim.execute(timeLimit, out, delayTime);
 	}
 }

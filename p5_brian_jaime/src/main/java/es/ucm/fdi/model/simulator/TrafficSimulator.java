@@ -141,7 +141,7 @@ public class TrafficSimulator {
 	 * @throws SimulatorException 
 	*/
 	
-	public void execute(int pasosSimulacion, OutputStream o) throws IOException, SimulatorException {
+	public void execute(int pasosSimulacion, OutputStream o, int delayTime) throws IOException, SimulatorException {
 		int limiteTiempo = contadorTiempo + pasosSimulacion - 1;
 		logger.info("Ejecutando simulación");
 		while (contadorTiempo <= limiteTiempo) {

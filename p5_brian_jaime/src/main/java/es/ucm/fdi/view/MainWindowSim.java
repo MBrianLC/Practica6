@@ -103,7 +103,9 @@ public class MainWindowSim extends JFrame implements Listener {
 	private Action output = new SimulatorAction(Command.Output, null, "Redirect simulation's output to text area",
 			KeyEvent.VK_R, "control shift O", () -> redirectOutput());
 	private Action stop = new SimulatorAction(Command.Output, "stop.png", "Stops simulation",
-			KeyEvent.VK_R, "alt shift S", () -> stopSim());
+			KeyEvent.VK_R, "alt shift S", () -> stopSim());	
+	private Action[] actions = {exit, load, save, clear, checkIn, run, saveReport, genReport,
+								clearReport, reset, output, stop};
 	
 	private static final Logger logger = Logger.getLogger(MainWindowSim.class.getName());
 	
@@ -386,7 +388,13 @@ public class MainWindowSim extends JFrame implements Listener {
 		try {
 			tsim.resetEvents();
 			contr.setTime((int)stepsSpinner.getValue());
+			for (Action a: actions) {
+				if (a != stop) a.setEnabled(false);
+			}
 			contr.execute(tsim);
+			for (Action a: actions) {
+				a.setEnabled(true);
+			}
 			tableSim = new TableSim(map, events);
 			statusBarText.setText("Simulator has run succesfully!");
 		} catch (IOException ex) {
