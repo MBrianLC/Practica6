@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -255,7 +256,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		delaySpinner = new JSpinner(new SpinnerNumberModel(300, 1, 1000, 1));
 		delaySpinner.addChangeListener(new ChangeListener() {
     		public void stateChanged(ChangeEvent e) {
-    	    	//contr.setDelay((int)delaySpinner.getValue());
+    	    	contr.setDelayTime((int)delaySpinner.getValue());
 			}
 		});
 		toolBar.add(delaySpinner);
@@ -385,25 +386,30 @@ public class MainWindowSim extends JFrame implements Listener {
 	}
 	
 	private void runSim() {
-		try {
-			tsim.resetEvents();
-			contr.setTime((int)stepsSpinner.getValue());
-			for (Action a: actions) {
-				if (a != stop) a.setEnabled(false);
-			}
-			contr.execute(tsim);
-			for (Action a: actions) {
-				a.setEnabled(true);
-			}
-			tableSim = new TableSim(map, events);
-			statusBarText.setText("Simulator has run succesfully!");
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			logger.severe("Fallo al leer los eventos");
-		} catch (SimulatorException ex) {
-			ex.printStackTrace();
-			logger.severe("Fallo de simulación");
-		}
+		tsim.resetEvents();
+		contr.setTime(1);
+		Stepper s = new Stepper(
+			() -> {
+				for (Action a: actions) {
+					if (a != stop) a.setEnabled(false);
+			}}, 
+			() -> SwingUtilities.invokeLater(() -> {
+				try {
+					contr.execute(tsim);
+				} catch (IOException e) {
+					logger.severe("Fallo al leer los eventos");
+				} catch (SimulatorException e) {
+					logger.severe("Fallo de simulación");
+				}
+			}),
+			() -> {
+				for (Action a: actions) {
+					if (a != stop) a.setEnabled(true);
+			}}
+		); 
+		s.start((int)stepsSpinner.getValue(), contr.getDelayTime());
+		tableSim = new TableSim(map, events);
+		statusBarText.setText("Simulator has run succesfully!");
 	}
 	
 	private void checkInEvent() {

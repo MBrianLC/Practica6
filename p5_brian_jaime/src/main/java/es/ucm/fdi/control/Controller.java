@@ -67,6 +67,10 @@ public class Controller {
 		return timeLimit;
 	}
 	
+	public int getDelayTime (){
+		return delayTime;
+	}
+	
 	/** 
 	 * Método que lee las secciones de eventos, les asigna el builder correspondiente a cada una, y ejecuta la simulación.
 	 * @param sim : La simulación de tráfico
@@ -98,4 +102,5 @@ public class Controller {
 		}
 		sim.execute(timeLimit, out, delayTime);
 	}
+
 }
