@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import es.ucm.fdi.model.simobjects.Junction;
@@ -45,7 +44,7 @@ public class RoadMap {
 	*/
 	public SimObject getSimObject(String id) {
 		if (!simObjects.containsKey(id)){
-			logger.log(Level.WARNING, "The object with ID " + id + " doesn't exist.", new NullPointerException());
+			throw new NullPointerException("The object with ID " + id + " doesn't exist.");
 		}
 		return simObjects.get(id);
 	}
@@ -57,7 +56,7 @@ public class RoadMap {
 	*/
 	public Vehicle getVehicle(String id) {
 		if (!simObjects.containsKey(id)) {
-			logger.log(Level.WARNING, "The vehicle with ID " + id + " doesn't exist.", new NullPointerException());
+			throw new NullPointerException("The vehicle with ID " + id + " doesn't exist.");
 		}
 		return (Vehicle) getSimObject(id);
 	}
@@ -69,7 +68,7 @@ public class RoadMap {
 	*/
 	public Road getRoad(String id) {
 		if (!simObjects.containsKey(id)) {
-			logger.log(Level.WARNING, "The road with ID " + id + " doesn't exist.", new NullPointerException());
+			throw new NullPointerException("The road with ID " + id + " doesn't exist.");
 		}
 		return (Road) getSimObject(id);
 	}
@@ -81,7 +80,7 @@ public class RoadMap {
 	*/
 	public Junction getJunction(String id) {
 		if (!simObjects.containsKey(id)) {
-			logger.log(Level.WARNING, "The junction with ID " + id + " doesn't exist.", new NullPointerException());
+			throw new NullPointerException("The junction with ID " + id + " doesn't exist.");
 		}
 		return (Junction) getSimObject(id);
 	}
@@ -128,7 +127,7 @@ public class RoadMap {
 	*/	
 	public void addVehicle(Vehicle v) {
 		if (simObjects.containsKey(v.getID())) {
-			logger.log(Level.WARNING, "The vehicle with ID " + v.getID() + " already exists.", new IllegalArgumentException());
+			throw new IllegalArgumentException("The vehicle with ID " + v.getID() + " already exists.");
 		}
 		simObjects.put(v.getID(), v);
 		vehicles.add(v);
@@ -141,7 +140,7 @@ public class RoadMap {
 	*/
 	public void addRoad(Road r) {
 		if (simObjects.containsKey(r.getID())) {
-			logger.log(Level.WARNING, "The road with ID " + r.getID() + " already exists.", new IllegalArgumentException());
+			throw new IllegalArgumentException("The road with ID " + r.getID() + " already exists.");
 		}
 		simObjects.put(r.getID(), r);
 		roads.add(r);
@@ -154,7 +153,7 @@ public class RoadMap {
 	*/
 	public void addJunction(Junction j) {
 		if (simObjects.containsKey(j.getID())) {
-			logger.log(Level.WARNING, "The junction with ID " + j.getID() + " already exists.", new IllegalArgumentException());
+			throw new IllegalArgumentException("The junction with ID " + j.getID() + " already exists.");
 		}
 		simObjects.put(j.getID(), j);
 		junctions.add(j);
