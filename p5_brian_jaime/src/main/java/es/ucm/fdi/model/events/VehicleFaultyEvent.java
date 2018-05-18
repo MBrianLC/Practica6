@@ -1,5 +1,8 @@
 package es.ucm.fdi.model.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.model.exceptions.SimulatorException;
 import es.ucm.fdi.model.simulator.RoadMap;
 
@@ -12,6 +15,8 @@ public class VehicleFaultyEvent extends Event{
 	private int duration;
 	private String[] vehicles;
 	private String type;
+	
+	private static final Logger logger = Logger.getLogger(NewDirtEvent.class.getName());
 	
 	/** 
 	 * Constructor de la clase VehicleFaultyEvent
@@ -53,6 +58,7 @@ public class VehicleFaultyEvent extends Event{
 				map.getVehicle(v).setTiempoAveria(duration);
 			}
 		} catch(NullPointerException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("VehicleFaulty " + ": invalid vehicles");
 		}
 	}

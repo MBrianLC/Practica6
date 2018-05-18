@@ -22,7 +22,7 @@ public class VehicleFaultyEventBuilder implements EventBuilder {
 		}
 		String[] parF = {"time", "vehicles", "duration"};
 		if (!sec.getKeys().containsAll(Arrays.asList(parF))) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid make_vehicle_faulty section.");
 		}
 		return new VehicleFaultyEvent(parseInt(sec, "time"), parseIdList(sec, "vehicles"),
 									  parseInt(sec, "duration"));

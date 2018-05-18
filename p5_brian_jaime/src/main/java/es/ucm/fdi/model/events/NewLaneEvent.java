@@ -1,5 +1,8 @@
 package es.ucm.fdi.model.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.model.simobjects.advanced.Lane;
 import es.ucm.fdi.model.exceptions.SimulatorException;
 import es.ucm.fdi.model.simobjects.Junction;
@@ -15,6 +18,8 @@ public class NewLaneEvent extends NewRoadEvent {
 	
 	private int lanes;
 	private String type;
+	
+	private static final Logger logger = Logger.getLogger(NewLaneEvent.class.getName());
 	
 	/** 
 	 * Constructor de la clase NewLanedEvent
@@ -56,8 +61,10 @@ public class NewLaneEvent extends NewRoadEvent {
 			fin.addEntra(r);
 			map.addRoad(r);
 		} catch(NullPointerException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Lane " + id + ": invalid source/destiny junctions");
 		} catch(IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Lane " + id + ": id already exists");
 		}
 	}

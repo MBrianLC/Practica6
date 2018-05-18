@@ -1,5 +1,8 @@
 package es.ucm.fdi.model.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.model.exceptions.SimulatorException;
 import es.ucm.fdi.model.simobjects.Junction;
 import es.ucm.fdi.model.simobjects.Road;
@@ -14,6 +17,8 @@ public class NewRoadEvent extends Event{
 	protected String id, sr, dest;
 	private String type;
 	protected int max, length;
+	
+	private static final Logger logger = Logger.getLogger(NewRoadEvent.class.getName());
 	
 	/** 
 	 * Constructor de la clase NewRoadEvent
@@ -59,8 +64,10 @@ public class NewRoadEvent extends Event{
 			fin.addEntra(r);
 			map.addRoad(r);
 		} catch(NullPointerException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Road " + id + ": invalid source/destiny junctions");
 		} catch(IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Road " + id + ": id already exists");
 		}
 	}

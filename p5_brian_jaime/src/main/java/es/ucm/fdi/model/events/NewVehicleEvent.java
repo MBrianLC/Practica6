@@ -2,6 +2,8 @@ package es.ucm.fdi.model.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.model.exceptions.SimulatorException;
 import es.ucm.fdi.model.simobjects.Junction;
@@ -18,6 +20,8 @@ public class NewVehicleEvent extends Event{
 	protected String[] cruces;
 	protected int max;
 	private String type;
+	
+	private static final Logger logger = Logger.getLogger(NewVehicleEvent.class.getName());
 	
 	/** 
 	 * Constructor de la clase NewVehicleEvent
@@ -60,8 +64,10 @@ public class NewVehicleEvent extends Event{
 			v.moverASiguienteCarretera(itinerario.get(0).road(v));
 			map.addVehicle(v);
 		} catch(NullPointerException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Vehicle " + id + ": invalid itinerary");
 		} catch(IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Vehicle " + id + ": id already exists");
 		}
 	}

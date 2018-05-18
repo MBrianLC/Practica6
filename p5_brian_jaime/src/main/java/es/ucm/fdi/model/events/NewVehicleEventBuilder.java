@@ -22,7 +22,7 @@ public class NewVehicleEventBuilder implements EventBuilder{
 		}
 		String[] parV = {"time", "id", "max_speed", "itinerary"};
 		if (!sec.getKeys().containsAll(Arrays.asList(parV))) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid new_vehicle section.");
 		}
 		if (!sec.getKeys().contains("type")) {
 			return new NewVehicleEvent(parseInt(sec, "time"), sec.getValue("id"),
@@ -34,7 +34,7 @@ public class NewVehicleEventBuilder implements EventBuilder{
 		}
 		String[] parC = {"resistance", "fault_probability", "max_fault_duration", "seed"};
 		if (!sec.getKeys().containsAll(Arrays.asList(parC))) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid new_vehicle section.");
 		}
 		long seed;
 		if (sec.getValue("seed").isEmpty()) {

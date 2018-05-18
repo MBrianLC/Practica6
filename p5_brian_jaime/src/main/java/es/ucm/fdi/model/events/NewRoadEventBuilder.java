@@ -22,7 +22,7 @@ public class NewRoadEventBuilder implements EventBuilder {
 		}
 		String[] parR = {"time", "id", "src", "dest", "max_speed", "length"};
 		if (!sec.getKeys().containsAll(Arrays.asList(parR))) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid new_road section.");
 		}
 		if (!sec.getKeys().contains("type")) {
 			return new NewRoadEvent(parseInt(sec, "time"), sec.getValue("id"),
@@ -35,7 +35,7 @@ public class NewRoadEventBuilder implements EventBuilder {
 									parseInt(sec, "max_speed"), parseInt(sec, "length"));
 		}
 		if (!sec.getKeys().contains("lanes")) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid new_road section.");
 		}
 		return new NewLaneEvent(parseInt(sec, "time"), sec.getValue("id"), 
 								sec.getValue("src"), sec.getValue("dest"),

@@ -1,5 +1,8 @@
 package es.ucm.fdi.model.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.model.simobjects.advanced.RoundRobin;
 import es.ucm.fdi.model.exceptions.SimulatorException;
 import es.ucm.fdi.model.simulator.RoadMap;
@@ -13,6 +16,7 @@ public class NewRoundRobinEvent extends NewJunctionEvent{
 	private int maxTimeSlice, minTimeSlice;
 	private String type;
 	
+	private static final Logger logger = Logger.getLogger(NewRoundRobinEvent.class.getName());
 	
 	/** 
 	 * Constructor de la clase NewRoundRobinEvent
@@ -48,6 +52,7 @@ public class NewRoundRobinEvent extends NewJunctionEvent{
 		try{
 			map.addJunction(new RoundRobin(id, maxTimeSlice, minTimeSlice));
 		} catch(IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("RoundRobin " + id + ": id already exists");
 		}
 	}

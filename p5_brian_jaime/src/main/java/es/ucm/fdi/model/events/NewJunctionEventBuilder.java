@@ -22,7 +22,7 @@ public class NewJunctionEventBuilder implements EventBuilder {
 		}
 		String[] parJ = {"time", "id"};
 		if (!sec.getKeys().containsAll(Arrays.asList(parJ))) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid new_junction section.");
 		}
 		if (!sec.getKeys().contains("type")) {
 			return new NewJunctionEvent(parseInt(sec, "time"), sec.getValue("id"));
@@ -31,7 +31,7 @@ public class NewJunctionEventBuilder implements EventBuilder {
 		}
 		String[] parRR = {"max_time_slice", "min_time_slice"};
 		if (!sec.getKeys().containsAll(Arrays.asList(parRR))) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid new_junction section.");
 		}
 		return new NewRoundRobinEvent(parseInt(sec, "time"), sec.getValue("id"), 
 									  parseInt(sec, "max_time_slice"), 

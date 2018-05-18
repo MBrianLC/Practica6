@@ -1,5 +1,8 @@
 package es.ucm.fdi.model.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.model.exceptions.SimulatorException;
 import es.ucm.fdi.model.simobjects.Junction;
 import es.ucm.fdi.model.simulator.RoadMap;
@@ -12,6 +15,8 @@ import es.ucm.fdi.model.simulator.RoadMap;
 public class NewJunctionEvent extends Event{
 	protected String id;
 	private String type;
+	
+	private static final Logger logger = Logger.getLogger(NewJunctionEvent.class.getName());
 	
 	/** 
 	 * Constructor de la clase NewJunctionEvent
@@ -44,6 +49,7 @@ public class NewJunctionEvent extends Event{
 		try {
 			map.addJunction(new Junction(id));
 		} catch(IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Junction " + id + ": id already exists");
 		}
 	}

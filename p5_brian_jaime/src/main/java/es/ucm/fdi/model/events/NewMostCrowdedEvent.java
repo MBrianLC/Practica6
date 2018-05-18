@@ -1,5 +1,8 @@
 package es.ucm.fdi.model.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import es.ucm.fdi.model.simobjects.advanced.MostCrowded;
 import es.ucm.fdi.model.exceptions.SimulatorException;
 import es.ucm.fdi.model.simulator.RoadMap;
@@ -12,6 +15,8 @@ import es.ucm.fdi.model.simulator.RoadMap;
 public class NewMostCrowdedEvent extends NewJunctionEvent{	
 	
 	private String type;
+	
+	private static final Logger logger = Logger.getLogger(NewMostCrowdedEvent.class.getName());
 
 	/** 
 	 * Constructor de la clase NewMostCrowdedEvent
@@ -43,6 +48,7 @@ public class NewMostCrowdedEvent extends NewJunctionEvent{
 		try {
 			map.addJunction(new MostCrowded(id));
 		} catch(IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("MostCrowded " + id + ": id already exists");
 		}
 	}

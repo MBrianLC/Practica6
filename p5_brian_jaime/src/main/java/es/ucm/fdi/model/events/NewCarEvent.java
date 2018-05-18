@@ -2,6 +2,8 @@ package es.ucm.fdi.model.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import es.ucm.fdi.model.simobjects.advanced.Car;
 import es.ucm.fdi.model.exceptions.SimulatorException;
@@ -20,6 +22,8 @@ public class NewCarEvent extends NewVehicleEvent{
 	private double faultProbability;
 	private long seed;
 	private String type;
+	
+	private static final Logger logger = Logger.getLogger(NewCarEvent.class.getName());
 	
 	/** 
 	 * Constructor de la clase NewCarEvent
@@ -68,8 +72,10 @@ public class NewCarEvent extends NewVehicleEvent{
 			v.moverASiguienteCarretera(itinerario.get(0).road(v));
 			map.addVehicle(v);
 		} catch(NullPointerException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Car " + id + ": invalid itinerary");
 		} catch(IllegalArgumentException e) {
+			logger.log(Level.WARNING, e.getMessage(), e);
 			throw new SimulatorException("Car " + id + ": id already exists");
 		}
 	}
