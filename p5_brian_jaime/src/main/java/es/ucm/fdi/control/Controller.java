@@ -78,7 +78,7 @@ public class Controller {
 	 * @throws SimulatorException 
 	*/
 	
-	public void execute(TrafficSimulator sim) throws IOException, SimulatorException {
+	public void insertEvents(TrafficSimulator sim) throws IOException, SimulatorException {
 		logger.info("Identificando simulación");
 		for (IniSection n : ini.getSections()) {
 			boolean b = false;
@@ -100,6 +100,9 @@ public class Controller {
 				System.exit(1);
 			}
 		}
+	}
+	
+	public void execute(TrafficSimulator sim) throws IOException, SimulatorException {
 		sim.execute(timeLimit, out, delayTime);
 	}
 

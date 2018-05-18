@@ -122,9 +122,9 @@ public class Main {
 	}
 	
 	private static void parseModeOption(CommandLine line) throws ParseException {
-		String s = line.getOptionValue("m");
-		if (s != null && (s.equals("batch") || s.equals("GUI"))) {
-			if (s.equals("GUI")) mode = false;
+		String s = line.getOptionValue("m").toLowerCase();
+		if (s != null && (s.equals("batch") || s.equals("gui"))) {
+			if (s.equals("gui")) mode = false;
 		}
 	}
 
@@ -184,7 +184,9 @@ public class Main {
 		}
 		InputStream in = new FileInputStream(_inFile);
 		Controller c = new Controller(new Ini(in), out, _timeLimit);
-		c.execute(new TrafficSimulator());
+		TrafficSimulator tsim = new TrafficSimulator();
+		c.insertEvents(tsim);
+		c.execute(tsim);
 	}
 	
 	/**

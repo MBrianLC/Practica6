@@ -58,6 +58,7 @@ public class MainWindowSim extends JFrame implements Listener {
 	private List<EventIndex> events;
 	private int time;
 	private OutputStream reportsOutputStream;
+	private Stepper stepper;
 	
 	private TableSim tableSim;
 	private RoadMapGraph rmGraph;
@@ -132,7 +133,6 @@ public class MainWindowSim extends JFrame implements Listener {
 		reportsOutputStream = new JTextAreaOutputStream(reportsArea);
 		contr.setOutputStream(reportsOutputStream);
 		this.tsim.addSimulatorListener(this);
-		this.tsim.addSimulatorListener(tableSim);
 		this.tsim.addSimulatorListener(rmGraph);
 	}
 
@@ -150,6 +150,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		addEventsEditor();
 		
 		tableSim = new TableSim(map, events);
+		tsim.addSimulatorListener(tableSim);
 		
 		addReportsArea(); // zona de informes
 		addMap(); // mapa de carreteras
@@ -183,7 +184,10 @@ public class MainWindowSim extends JFrame implements Listener {
 				String s = readFile(currentFile);
 				eventsEditor.setText(s);
 				editorPanel.setBorder(BorderFactory.createTitledBorder("Events: " + currentFile.getName()));
+				contr.insertEvents(tsim);
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (SimulatorException e) {
 				e.printStackTrace();
 			}
 		}
@@ -259,6 +263,7 @@ public class MainWindowSim extends JFrame implements Listener {
     	    	contr.setDelayTime((int)delaySpinner.getValue());
 			}
 		});
+		contr.setDelayTime(300);
 		toolBar.add(delaySpinner);
 		
 		toolBar.add(new JLabel(" Steps: "));   
@@ -388,13 +393,14 @@ public class MainWindowSim extends JFrame implements Listener {
 	private void runSim() {
 		tsim.resetEvents();
 		contr.setTime(1);
-		Stepper s = new Stepper(
+		stepper = new Stepper(
 			() -> {
 				for (Action a: actions) {
 					if (a != stop) a.setEnabled(false);
 			}}, 
 			() -> SwingUtilities.invokeLater(() -> {
 				try {
+					contr.insertEvents(tsim);
 					contr.execute(tsim);
 				} catch (IOException e) {
 					logger.severe("Fallo al leer los eventos");
@@ -407,7 +413,7 @@ public class MainWindowSim extends JFrame implements Listener {
 					if (a != stop) a.setEnabled(true);
 			}}
 		); 
-		s.start((int)stepsSpinner.getValue(), contr.getDelayTime());
+		stepper.start((int)stepsSpinner.getValue(), contr.getDelayTime());
 		tableSim = new TableSim(map, events);
 		statusBarText.setText("Simulator has run succesfully!");
 	}
@@ -426,6 +432,11 @@ public class MainWindowSim extends JFrame implements Listener {
 		time = 0;
 		reportsArea.setText("");
 		tsim.resetSim();
+		try {
+			contr.insertEvents(tsim);
+		} catch (IOException | SimulatorException e) {
+			e.printStackTrace();
+		}
 		statusBarText.setText("Simulation reseted!");
 		logger.fine("Simulación reseteada");
 	}
@@ -454,7 +465,7 @@ public class MainWindowSim extends JFrame implements Listener {
 	}
 	
 	private void stopSim() {
-
+		stepper.stop();
 	}
 	
 	/** 
