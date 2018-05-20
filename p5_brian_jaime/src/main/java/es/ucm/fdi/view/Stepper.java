@@ -11,36 +11,34 @@ public class Stepper {
 	private static final Logger logger = Logger.getLogger(Stepper.class.getName());
 
 	public Stepper(Runnable before, Runnable during, Runnable after){
-	  this.before = before;
-	  this.during = during;
-	  this.after = after;
+		this.before = before;
+		this.during = during;
+		this.after = after;
 	}
 
 	public Thread start (int steps, int delay){
-	  this.steps = steps;
-	  stopRequested = false;
-
-	  Thread t = new Thread (() -> {
-	    try {
-	      before.run();
-	      while ( !stopRequested && Stepper.this.steps > 0){
-	        during.run();
-	        try {
-	          Thread.sleep(delay);
-	        } catch (InterruptedException ie){
-	          // ignore and continue
-	        }
-	        Stepper.this.steps--;
-	      }
-	    } catch (Exception e) {
-	      logger.warning("Exception while stepping, " + this.steps + " remaining: " + e);
-	    } finally {
-	      after.run ();
-	    }
-	  });
-	  
-	  t.start ();
-	  return t;
+		this.steps = steps;
+		stopRequested = false;
+		Thread t = new Thread (() -> {
+			try {
+				before.run();
+				while ( !stopRequested && Stepper.this.steps > 0){
+					during.run();
+					try {
+						Thread.sleep(delay);
+					} catch (InterruptedException ie){
+						// ignore and continue
+					}
+					Stepper.this.steps--;
+				}
+			} catch (Exception e) {
+				logger.warning("Exception while stepping, " + this.steps + " remaining: " + e);
+			} finally {
+				after.run ();
+			}
+		});
+		t.start ();
+		return t;
 	}
 	
 	public void stop() {

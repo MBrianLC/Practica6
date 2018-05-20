@@ -192,7 +192,7 @@ public class MainWindowSim extends JFrame implements Listener {
 					tsim.newError(e.getMessage());;
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.WARNING, e.getMessage(), e);
 			}
 		}
 		this.setContentPane(mainPanel);
@@ -400,7 +400,9 @@ public class MainWindowSim extends JFrame implements Listener {
 		stepper = new Stepper(
 			() -> {
 				for (Action a: actions) {
-					if (a != stop) a.setEnabled(false);
+					if (a != stop) {
+						a.setEnabled(false);
+					}
 			}}, 
 			() -> SwingUtilities.invokeLater(() -> {
 				try {
@@ -412,7 +414,9 @@ public class MainWindowSim extends JFrame implements Listener {
 			}),
 			() -> {
 				for (Action a: actions) {
-					if (a != stop) a.setEnabled(true);
+					if (a != stop) {
+						a.setEnabled(true);
+					}
 			}}
 		); 
 		stepper.start((int)stepsSpinner.getValue(), (int)delaySpinner.getValue());
