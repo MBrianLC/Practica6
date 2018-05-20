@@ -34,18 +34,10 @@ public class TableSim implements Listener{
 	private ListOfMapsTableModel rTableMaps;
 	private ListOfMapsTableModel jTableMaps;
 	
-	private JTable eventsQueue; // tabla de eventos
-	private JTable vehiclesTable; // tabla de vehículos
-	private JTable roadsTable; // tabla de carreteras
-	private JTable junctionsTable; // tabla de cruces
-	
 	private JPanel eventsPanel;
 	private JPanel vehiclesPanel;
 	private JPanel roadsPanel;
 	private JPanel junctionsPanel;
-	
-	private RoadMap map;
-	private List<EventIndex> events;
 	
 	/** 
 	 * Constructor de TableSim.
@@ -54,12 +46,14 @@ public class TableSim implements Listener{
 	*/
 	
 	public TableSim(RoadMap map, List<EventIndex> events) {
-		this.map = map;
-		this.events = events;
-		addEventsQueue(); // cola de eventos
-		addVehiclesTable(); // tabla de vehiculos
-		addRoadsTable(); // tabla de carreteras
-		addJunctionsTable(); // tabla de cruces
+		eTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(events), fieldNamesQ); 
+		vTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(map.getVehicles()), fieldNamesV); 
+		rTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(map.getRoads()), fieldNamesR); 
+		jTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(map.getJunctions()), fieldNamesJ); 
+		eventsPanel = addTable(eTableMaps, "Events Queue"); // cola de eventos
+		vehiclesPanel = addTable(vTableMaps, "Vehicles"); // tabla de vehiculos
+		roadsPanel = addTable(rTableMaps, "Roads"); // tabla de carreteras
+		junctionsPanel = addTable(jTableMaps, "Junctions"); // tabla de cruces
 	}
 	
 	/** 
@@ -136,65 +130,19 @@ public class TableSim implements Listener{
 	}
 	
 	/** 
-	 * Añade la cola de eventos.
+	 * Añade una tabla (cola de eventos, tabla de vehículos, de carreteras o de cruces).
 	*/
 	
-	private void addEventsQueue() {
-		eventsPanel = new JPanel(new BorderLayout());
-		List<Describable> objectList = new ArrayList<Describable>(events);
-		eTableMaps = new ListOfMapsTableModel(objectList, fieldNamesQ); 
-		eventsQueue = new JTable(eTableMaps); 
-		JScrollPane sp = new JScrollPane(eventsQueue);
+	private JPanel addTable(ListOfMapsTableModel tableMaps, String title) {
+		JPanel panel = new JPanel(new BorderLayout());
+		JTable table = new JTable(tableMaps); 
+		JScrollPane sp = new JScrollPane(table);
 		sp.setPreferredSize(new Dimension(500, 500));
-		eventsPanel.setBorder(BorderFactory.createTitledBorder("Events Queue"));
-		eventsPanel.add(sp);
+		panel.setBorder(BorderFactory.createTitledBorder(title));
+		panel.add(sp);
+		return panel;
 	}
-	
-	/** 
-	 * Añade la tabla de vehículos.
-	*/
-	
-	private void addVehiclesTable() {
-		vehiclesPanel = new JPanel(new BorderLayout());
-		List<Describable> objectList = new ArrayList<Describable>(map.getVehicles());
-		vTableMaps = new ListOfMapsTableModel(objectList, fieldNamesV); 
-		vehiclesTable = new JTable(vTableMaps); 
-		JScrollPane sp = new JScrollPane(vehiclesTable);
-		sp.setPreferredSize(new Dimension(500, 500));
-		vehiclesPanel.setBorder(BorderFactory.createTitledBorder("Vehicles"));
-		vehiclesPanel.add(sp);	
-	}
-	
-	/** 
-	 * Añade la tabla de carreteras.
-	*/
-	
-	private void addRoadsTable() {
-		roadsPanel = new JPanel(new BorderLayout());
-		List<Describable> objectList = new ArrayList<Describable>(map.getRoads());
-		rTableMaps = new ListOfMapsTableModel(objectList, fieldNamesR);
-		roadsTable = new JTable(rTableMaps);
-		JScrollPane sp = new JScrollPane(roadsTable);
-		sp.setPreferredSize(new Dimension(500, 500));
-		roadsPanel.setBorder(BorderFactory.createTitledBorder("Roads"));
-		roadsPanel.add(sp);
-	}
-	
-	/** 
-	 * Añade la tabla de cruces.
-	*/
-	
-	private void addJunctionsTable() {
-		junctionsPanel = new JPanel(new BorderLayout());
-		List<Describable> objectList = new ArrayList<Describable>(map.getJunctions());
-		jTableMaps = new ListOfMapsTableModel(objectList, fieldNamesJ); 
-		junctionsTable = new JTable(jTableMaps); 
-		JScrollPane sp = new JScrollPane(junctionsTable);
-		sp.setPreferredSize(new Dimension(500, 500));
-		junctionsPanel.setBorder(BorderFactory.createTitledBorder("Junctions"));
-		junctionsPanel.add(sp);
-	}
-	
+
 	/** 
 	 * Crea una lista de EventIndex a partir de una lista de eventos.
 	 * @param eventos: Lista de eventos
@@ -216,7 +164,7 @@ public class TableSim implements Listener{
 	*/
 	
 	private void updateTable(ListOfMapsTableModel tableMaps, List<Describable> elements) {
-		tableMaps.update(new ArrayList<Describable>(elements));
+		tableMaps.update(elements);
 		tableMaps.fireTableDataChanged();
 	}
 	
