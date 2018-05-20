@@ -46,10 +46,10 @@ public class TableSim implements Listener{
 	*/
 	
 	public TableSim(RoadMap map, List<EventIndex> events) {
-		eTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(events), fieldNamesQ); 
-		vTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(map.getVehicles()), fieldNamesV); 
-		rTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(map.getRoads()), fieldNamesR); 
-		jTableMaps = new ListOfMapsTableModel(new ArrayList<Describable>(map.getJunctions()), fieldNamesJ); 
+		eTableMaps = new ListOfMapsTableModel(events, fieldNamesQ); 
+		vTableMaps = new ListOfMapsTableModel(map.getVehicles(), fieldNamesV); 
+		rTableMaps = new ListOfMapsTableModel(map.getRoads(), fieldNamesR); 
+		jTableMaps = new ListOfMapsTableModel(map.getJunctions(), fieldNamesJ); 
 		eventsPanel = addTable(eTableMaps, "Events Queue"); // cola de eventos
 		vehiclesPanel = addTable(vTableMaps, "Vehicles"); // tabla de vehiculos
 		roadsPanel = addTable(rTableMaps, "Roads"); // tabla de carreteras
@@ -102,8 +102,9 @@ public class TableSim implements Listener{
 		private List<Describable> elements;
 		private String[] fieldNames;
 		
-		public ListOfMapsTableModel(List<Describable> objectList, String[] names) {
-			elements = objectList;
+		@SuppressWarnings("unchecked")
+		public ListOfMapsTableModel(Object objectList, String[] names) {
+			elements = (List<Describable>) objectList;
 			fieldNames = names;
 		}
 		
@@ -124,8 +125,9 @@ public class TableSim implements Listener{
 			return elements.get(rowIndex).describe().get(fieldNames[columnIndex]);
 		}
 		
-		public void update(List<Describable> objectList) {
-			elements = objectList;
+		@SuppressWarnings("unchecked")
+		public void update(Object objectList) {
+			elements = (List<Describable>) objectList;
 		}
 	}
 	
@@ -163,7 +165,7 @@ public class TableSim implements Listener{
 	 * @param elements: Elementos de la nueva tabla
 	*/
 	
-	private void updateTable(ListOfMapsTableModel tableMaps, List<Describable> elements) {
+	private void updateTable(ListOfMapsTableModel tableMaps, Object elements) {
 		tableMaps.update(elements);
 		tableMaps.fireTableDataChanged();
 	}
@@ -177,10 +179,10 @@ public class TableSim implements Listener{
 	public void update(UpdateEvent ue, String error) {
 		switch (ue.getEvent()) {
 			case ADVANCED:{
-				updateTable(eTableMaps, new ArrayList<Describable>(getEvents(ue.getEventQueue())));
-				updateTable(vTableMaps, new ArrayList<Describable>(ue.getRoadMap().getVehicles()));
-				updateTable(rTableMaps, new ArrayList<Describable>(ue.getRoadMap().getRoads()));
-				updateTable(jTableMaps, new ArrayList<Describable>(ue.getRoadMap().getJunctions()));
+				updateTable(eTableMaps, getEvents(ue.getEventQueue()));
+				updateTable(vTableMaps, ue.getRoadMap().getVehicles());
+				updateTable(rTableMaps, ue.getRoadMap().getRoads());
+				updateTable(jTableMaps, ue.getRoadMap().getJunctions());
 				break;
 			}	
 			case NEWEVENT:{
