@@ -1,16 +1,10 @@
-Autores: Brian Leiva Cerna y Jaime Fern�ndez D�az
-Github: https://github.com/MBrianLC/Practica5/
+Autores: Brian Leiva Cerna y Jaime Fernández Díaz
+Github: https://github.com/MBrianLC/Practica6/
 Commit:
 
-Mejoras respecto a P4:
-- Corregido el DirtTest
-- Eliminados comentarios innecesarios en los Test
-- Eliminadas pruebas de get y set
-- Mejorado el estilo en general: a�adidos bloques {} en todos los if y for, arreglada la concatenaci�n de try-catch e if-else,
-	eliminados super innecesarios, y se han quitado los '_' en las variables.
-- Cambio de nombre en los paquetes a simbojects y simobjects.advanced
-- SimObjects ahora se llama roadMap (en TrafficSimulator)
-- Uso de StringBuilder en los bucles de simobjects, en vez de String
-- M�todos est�ticos en los Builders
-- A�adidos detalles a las excepciones de RoadMap
-- Quitados bloques try/catch de los test
+Mejoras respecto a P5:
+- Logger ahora aporta información sobre los errores
+- El comando gui ahora también funciona en minúsculas
+- Events Queue ya muestra información al principio de la simulación, antes solo la mostraba tras iniciarla
+- Excepciones más detalladas en general, incluyendo RoadMap
+- Los paneles panel1, panel2, panel3 y panel4 de MainWindowSim han sido renombrados a mainBox, topPanel, bottomPanel y leftPanel respectivamente, indicando su función
