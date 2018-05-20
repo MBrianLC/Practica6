@@ -43,7 +43,7 @@ class DialogWindow extends JDialog {
 
 		_status = 0;
 
-		setTitle("Some Dialog");
+		setTitle("Generate reports");
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		JPanel contentPanel = new JPanel();
@@ -92,7 +92,6 @@ class DialogWindow extends JDialog {
 
 
 		JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
 
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {

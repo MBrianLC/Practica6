@@ -40,26 +40,26 @@ public class Controller {
 		this.ini = ini;
 		this.out = out;
 		this.timeLimit = timeLimit;
-		logger.info("Creando controller");
+		logger.info("Creating controller");
 	}
 	
 	public void setIni (Ini ini){
-		logger.fine("Ini modificado");
+		logger.fine("Ini modified");
 		this.ini = ini;
 	}
 	
 	public void setTime (int timeLimit){
-		logger.fine("Tiempo modificado");
+		logger.fine("Time modified");
 		this.timeLimit = timeLimit;
 	}
 	
 	public void setDelayTime (int delayTime){
-		logger.fine("Tiempo modificado");
+		logger.fine("Time modified");
 		this.delayTime = delayTime;
 	}
 	
 	public void setOutputStream (OutputStream out){
-		logger.fine("Salida de texto modificada");
+		logger.fine("Output stream modified");
 		this.out = out;
 	}
 	
@@ -72,37 +72,35 @@ public class Controller {
 	}
 	
 	/** 
-	 * Método que lee las secciones de eventos, les asigna el builder correspondiente a cada una, y ejecuta la simulación.
+	 * Método que lee las secciones de eventos, y les asigna el builder correspondiente a cada una.
 	 * @param sim : La simulación de tráfico
 	 * @throws IOException 
 	 * @throws SimulatorException 
 	*/
 	
 	public void insertEvents(TrafficSimulator sim) throws IOException, SimulatorException {
-		logger.info("Identificando simulación");
 		for (IniSection n : ini.getSections()) {
 			boolean b = false;
-			try {
-				if (!n.getTag().isEmpty()) {
-					for (EventBuilder eBuilder : events) {
-						if (n.getTag().equals(eBuilder.type())) {
-							sim.insertaEvento(eBuilder.parse(n));
-							b = true;
-						}
+			if (!n.getTag().isEmpty()) {
+				for (EventBuilder eBuilder : events) {
+					if (n.getTag().equals(eBuilder.type())) {
+						sim.insertaEvento(eBuilder.parse(n));
+						b = true;
 					}
 				}
-				if (!b){
-					logger.severe("Tag no identificada");
-					throw new IllegalArgumentException("Incorrect tag: " + n.getTag());
-				}
-			} catch(IllegalArgumentException e) {
-				System.err.println(e.getMessage());
-				System.exit(1);
+			}
+			if (!b){
+				throw new IllegalArgumentException("Incorrect tag: " + n.getTag());
 			}
 		}
 	}
 	
-	public void execute(TrafficSimulator sim) throws IOException, SimulatorException {
+	/** 
+	 * Método que ejecuta la simulación.
+	 * @param sim : La simulación de tráfico
+	*/
+	
+	public void execute(TrafficSimulator sim) throws IOException, SimulatorException{
 		sim.execute(timeLimit, out, delayTime);
 	}
 

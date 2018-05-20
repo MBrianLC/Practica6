@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.Action;
@@ -35,6 +36,7 @@ import javax.swing.event.ChangeListener;
 
 import es.ucm.fdi.control.Controller;
 import es.ucm.fdi.control.SimulatorAction;
+import es.ucm.fdi.extra.dialog.ErrorWindow;
 import es.ucm.fdi.extra.dialog.ReportWindow;
 import es.ucm.fdi.extra.graphlayout.RoadMapGraph;
 import es.ucm.fdi.extra.popupmenu.PopUpMenu;
@@ -128,7 +130,7 @@ public class MainWindowSim extends JFrame implements Listener {
 			events.add(new EventIndex(i, tsim.getEventQueue().get(i)));
 		}
 		currentFile = inFileName != null ? new File(inFileName) : null;
-		logger.info("Iniciando interfaz");
+		logger.info("Creating interface");
 		initGUI();
 		reportsOutputStream = new JTextAreaOutputStream(reportsArea);
 		contr.setOutputStream(reportsOutputStream);
@@ -178,16 +180,18 @@ public class MainWindowSim extends JFrame implements Listener {
 		leftPanel.add(tableSim.getJunctionsPanel());
 		
 		mainPanel.add(mainBox);
-		logger.info("Verificando si hay archivo inicial");
+		logger.info("Verifying if there is an initial file");
 		if (currentFile != null) {
 			try {
 				String s = readFile(currentFile);
 				eventsEditor.setText(s);
 				editorPanel.setBorder(BorderFactory.createTitledBorder("Events: " + currentFile.getName()));
-				contr.insertEvents(tsim);
+				try {
+					contr.insertEvents(tsim);
+				} catch (SimulatorException e) {
+					tsim.newError(e.getMessage());;
+				}
 			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (SimulatorException e) {
 				e.printStackTrace();
 			}
 		}
@@ -241,7 +245,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		reportsMenu.add(clearReport);
 		
 		this.setJMenuBar(menuBar);
-		logger.fine("Añadida barra de menú");
+		logger.fine("Added menu bar");
 	}
 	
 	private void addToolBar() {   
@@ -262,7 +266,6 @@ public class MainWindowSim extends JFrame implements Listener {
     	    	contr.setDelayTime((int)delaySpinner.getValue());
 			}
 		});
-		contr.setDelayTime(300);
 		toolBar.add(delaySpinner);
 		
 		toolBar.add(new JLabel(" Steps: "));   
@@ -284,7 +287,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		toolBar.addSeparator(); 
 		toolBar.add(exit);
 		
-		logger.fine("Añadida barra de herramientas");
+		logger.fine("Added toolbar");
 	}
 	
 	private void addEventsEditor(){
@@ -304,7 +307,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		popUpMenu = new PopUpMenu();
 		popUpMenu.addEditor(eventsEditor);
 		
-		logger.fine("Añadido editor de eventos");
+		logger.fine("Added events editor");
 
 	}
 	
@@ -318,7 +321,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		JScrollPane area = new JScrollPane(reportsArea);
 		area.setPreferredSize(new Dimension(500, 500));
 		reportsPanel.add(area);
-		logger.fine("Añadida zona de informes");
+		logger.fine("Added reports area");
 	}
 	
 	private void addStatusBar() {  
@@ -326,7 +329,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		statusBarText = new JLabel("Welcome to the simulator!");    
 		stateBar.add(statusBarText);
 		mainPanel.add(stateBar);
-		logger.fine("Añadida barra de estado");
+		logger.fine("Added status bar");
 	}
 	
 	private void addMap() {  
@@ -335,7 +338,7 @@ public class MainWindowSim extends JFrame implements Listener {
 		JScrollPane sp = new JScrollPane(rmGraph._graphComp);
 		sp.setPreferredSize(new Dimension(500, 500));
 		mapPanel.add(sp);
-		logger.fine("Añadido mapa");
+		logger.fine("Added map");
 	}
 	
 	private void saveFile() {
@@ -345,8 +348,9 @@ public class MainWindowSim extends JFrame implements Listener {
 			try {
 				writeFile(file, eventsEditor.getText());
 			} catch (IOException e) {
+				tsim.newError("The file has not been saved");
 				statusBarText.setText("ERROR: The file has not been saved");
-				logger.severe("No se ha podido guardar el archivo");
+				logger.log(Level.SEVERE, "The file has not been saved", e);
 			}
 		}
 		statusBarText.setText("The file have been saved!"); 
@@ -366,9 +370,9 @@ public class MainWindowSim extends JFrame implements Listener {
 				editorPanel.setBorder(BorderFactory.createTitledBorder("Events: " + currentFile.getName()));
 				
 			} catch (IOException e) {
-				e.printStackTrace();
+				tsim.newError("File not found");
 				statusBarText.setText("ERROR: File not found");
-				logger.severe("No se ha encontrado el archivo");
+				logger.log(Level.SEVERE, "File not found", e);
 			}
 		}
 		logger.fine("Archivo cargado");
@@ -381,8 +385,9 @@ public class MainWindowSim extends JFrame implements Listener {
 			try {
 				writeFile(file, reportsArea.getText());
 			} catch (IOException e) {
-				statusBarText.setText("ERROR: The reports have not been saved"); 
-				logger.severe("No se han podido guardar los informes");
+				tsim.newError("The reports have not been saved");
+				statusBarText.setText("ERROR: The reports have not been saved");
+				logger.log(Level.SEVERE, "The reports have not been saved", e);
 			}
 		}
 		statusBarText.setText("All reports have been saved!");
@@ -390,7 +395,7 @@ public class MainWindowSim extends JFrame implements Listener {
 	}
 	
 	private void runSim() {
-		tsim.resetEvents();
+		logger.info("Ejecutando simulación");
 		contr.setTime(1);
 		stepper = new Stepper(
 			() -> {
@@ -399,12 +404,10 @@ public class MainWindowSim extends JFrame implements Listener {
 			}}, 
 			() -> SwingUtilities.invokeLater(() -> {
 				try {
-					contr.insertEvents(tsim);
 					contr.execute(tsim);
-				} catch (IOException e) {
-					logger.severe("Fallo al leer los eventos");
-				} catch (SimulatorException e) {
-					logger.severe("Fallo de simulación");
+				} catch (IOException | SimulatorException e) {
+					tsim.newError(e.getMessage());
+					logger.log(Level.SEVERE, e.getMessage(), e);
 				}
 			}),
 			() -> {
@@ -412,7 +415,7 @@ public class MainWindowSim extends JFrame implements Listener {
 					if (a != stop) a.setEnabled(true);
 			}}
 		); 
-		stepper.start((int)stepsSpinner.getValue(), contr.getDelayTime());
+		stepper.start((int)stepsSpinner.getValue(), (int)delaySpinner.getValue());
 		tableSim = new TableSim(map, events);
 		statusBarText.setText("Simulator has run succesfully!");
 	}
@@ -420,8 +423,11 @@ public class MainWindowSim extends JFrame implements Listener {
 	private void checkInEvent() {
 		try {
 			contr.setIni(new Ini(new ByteArrayInputStream(eventsEditor.getText().getBytes())));
-		} catch (IOException e) {
-			e.printStackTrace();
+			tsim.resetEvents();
+			contr.insertEvents(tsim);
+		} catch (IllegalArgumentException | IOException | SimulatorException e) {
+			tsim.newError(e.getMessage());
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		}
 		statusBarText.setText("Events have been inserted into the simulator!");
 		logger.fine("Eventos insertados en el simulador");
@@ -433,8 +439,8 @@ public class MainWindowSim extends JFrame implements Listener {
 		tsim.resetSim();
 		try {
 			contr.insertEvents(tsim);
-		} catch (IOException | SimulatorException e) {
-			e.printStackTrace();
+		} catch (SimulatorException | IOException e) {
+			tsim.newError(e.getMessage());
 		}
 		statusBarText.setText("Simulation reseted!");
 		logger.fine("Simulación reseteada");
@@ -527,6 +533,7 @@ public class MainWindowSim extends JFrame implements Listener {
 			break;
 		}
 		case ERROR:{
+			new ErrorWindow(error);
 			statusBarText.setText(error);
 			break;
 		}

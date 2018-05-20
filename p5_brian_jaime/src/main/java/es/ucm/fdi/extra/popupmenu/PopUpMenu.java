@@ -31,7 +31,7 @@ public class PopUpMenu extends JFrame {
 		template.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				textArea.append(newJunction + "type = rr\n" + "max_time_slice = \n" + "min_time_slice = \n\n");
+				textArea.append(text);
 			}
 		});
 		return template;
