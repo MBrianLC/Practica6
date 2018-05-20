@@ -20,31 +20,21 @@ public class PopUpMenu extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String newVehicle() {
-		StringBuilder sb = new StringBuilder("[new_vehicle]\n");
-		sb.append("time = \n");
-		sb.append("id = \n");
-		sb.append("max_speed = \n");
-		sb.append("itinerary = \n");
-		return sb.toString();
-	}
+	private String newVehicle = "[new_vehicle]\n" + "time = \n" + "id = \n" +
+								"max_speed = \n" + "itinerary = \n";
+	private String newRoad = "[new_road]\n" + "time = \n" + "id = \n" + "src = \n" + 
+							 "dest = \n" + "max_speed = \n" + "length = \n";
+	private String newJunction = "[new_junction]\n" + "time = \n" + "id = \n";
 	
-	private String newRoad() {
-		StringBuilder sb = new StringBuilder("[new_road]\n");
-		sb.append("time = \n");
-		sb.append("id = \n");
-		sb.append("src = \n");
-		sb.append("dest = \n");
-		sb.append("max_speed = \n");
-		sb.append("length = \n");
-		return sb.toString();
-	}
-	
-	private String newJunction() {
-		StringBuilder sb = new StringBuilder("[new_junction]\n");
-		sb.append("time = \n");
-		sb.append("id = \n");
-		return sb.toString();
+	private JMenuItem template(JTextArea textArea, String title, String text) {
+		JMenuItem template = new JMenuItem(title);
+		template.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				textArea.append(newJunction + "type = rr\n" + "max_time_slice = \n" + "min_time_slice = \n\n");
+			}
+		});
+		return template;
 	}
 	
 	public void addEditor(JTextArea textArea) {
@@ -53,105 +43,19 @@ public class PopUpMenu extends JFrame {
 		
 		JMenu subMenu = new JMenu("Add Template");
 		
-		JMenuItem templateRROption = new JMenuItem("New RR Junction");
-		templateRROption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				StringBuilder sb = new StringBuilder(newJunction());
-				sb.append("type = rr\n");
-				sb.append("max_time_slice = \n");
-				sb.append("min_time_slice = \n\n");
-				textArea.append(sb.toString());
-			}
-		}); 
-		subMenu.add(templateRROption);
-		JMenuItem templateMCOption = new JMenuItem("New MC Junction");
-		templateMCOption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				textArea.append(newJunction() + "type = mc\n\n");
-			}
-		});
-		subMenu.add(templateMCOption);
-		JMenuItem templateJOption = new JMenuItem("New Junction");
-		templateJOption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				textArea.append(newJunction() + "\n");
-			}
-		});
-		subMenu.add(templateJOption);
-		JMenuItem templateDirtOption = new JMenuItem("New Dirt Road");
-		templateDirtOption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				textArea.append(newRoad() + "type = dirt\n\n");
-			}
-		});
-		subMenu.add(templateDirtOption);
-		JMenuItem templateLanesOption = new JMenuItem("New Lanes Road");
-		templateLanesOption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				StringBuilder sb = new StringBuilder(newRoad());
-				sb.append("type = lanes\n");
-				sb.append("lanes = \n\n");
-				textArea.append(sb.toString());
-			}
-		});
-		subMenu.add(templateLanesOption);
-		JMenuItem templateROption = new JMenuItem("New Road");
-		templateROption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				textArea.append(newRoad() + "\n");
-			}
-		});
-		subMenu.add(templateROption);
-		JMenuItem templateBikeOption = new JMenuItem("New Bike");
-		templateBikeOption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				textArea.append(newVehicle() + "type = bike\n\n");
-			}
-		});
-		subMenu.add(templateBikeOption);
-		JMenuItem templateCarOption = new JMenuItem("New Car");
-		templateCarOption.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				StringBuilder sb = new StringBuilder(newVehicle());
-				sb.append("type = car\n");
-				sb.append("resistance = \n");
-				sb.append("fault_probability = \n");
-				sb.append("max_fault_duration = \n");
-				sb.append("seed = \n\n");
-				textArea.append(sb.toString());
-			}
-		});
-		subMenu.add(templateCarOption);
-		JMenuItem templateVOption = new JMenuItem("New Vehicle");
-		templateVOption.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				textArea.append(newVehicle() + "\n");
-			}
-		});
-		subMenu.add(templateVOption);
-		JMenuItem templateFaultyOption = new JMenuItem("Make Vehicle Faulty");
-		templateFaultyOption.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				StringBuilder sb = new StringBuilder("[make_vehicle_faulty]\n");
-				sb.append("time = \n");
-				sb.append("vehicles = \n");
-				sb.append("duration = \n\n");
-				textArea.append(sb.toString());
-			}
-		});
-		subMenu.add(templateFaultyOption);
+		subMenu.add(template(textArea, "New RR Junction", newJunction + "type = rr\n" + 
+							 "max_time_slice = \n" + "min_time_slice = \n\n"));
+		subMenu.add(template(textArea, "New MC Junction", newJunction + "type = mc\n\n"));
+		subMenu.add(template(textArea, "New Junction", newJunction + "\n"));
+		subMenu.add(template(textArea, "New Dirt Road", newRoad + "type = dirt\n\n"));
+		subMenu.add(template(textArea, "New Lanes Road", newRoad + "type = lanes\n" + "lanes = \n\n"));
+		subMenu.add(template(textArea, "New Road", newRoad + "\n"));
+		subMenu.add(template(textArea, "New Bike", newVehicle + "type = bike\n\n"));
+		subMenu.add(template(textArea, "New Car", newVehicle + "type = car\n" + "resistance = \n" +
+									   "fault_probability = \n" + "max_fault_duration = \n" + "seed = \n\n"));
+		subMenu.add(template(textArea, "New Vehicle", newVehicle + "\n"));
+		subMenu.add(template(textArea, "Make Vehicle Faulty", "[make_vehicle_faulty]\n" + "time = \n" + 
+									   "vehicles = \n" + "duration = \n\n"));
 		
 		_editorPopupMenu.add(subMenu);
 		_editorPopupMenu.addSeparator();
