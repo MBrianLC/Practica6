@@ -3,8 +3,11 @@ Github: https://github.com/MBrianLC/Practica6/
 Commit:
 
 Mejoras respecto a P5:
+- El simulador lanza eventos de error, que aparecen como ventanas emergentes
 - Logger ahora aporta información sobre los errores
 - El comando gui ahora también funciona en minúsculas
 - Events Queue ya muestra información al principio de la simulación, antes solo la mostraba tras iniciarla
 - Excepciones más detalladas en general, incluyendo RoadMap
 - Los paneles panel1, panel2, panel3 y panel4 de MainWindowSim han sido renombrados a mainBox, topPanel, bottomPanel y leftPanel respectivamente, indicando su función
+- Controller ya no ejecuta System.exit(1) si hay error
+- Reducción de código de TableSim, que evita las copias innecesarias de listas, y PopUpMenu, en el que también se han eliminado los StringBuilders.
