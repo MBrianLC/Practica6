@@ -156,28 +156,28 @@ public class MainWindowSim extends JFrame implements Listener {
 		addMap(); // mapa de carreteras
 		addStatusBar(); // barra de estado
 		
-		JPanel panel1 = new JPanel();
-		panel1.setLayout(new BoxLayout(panel1,BoxLayout.Y_AXIS));
-		JPanel panel2 = new JPanel();
-		panel2.setLayout(new BoxLayout(panel2,BoxLayout.X_AXIS));
-		JPanel panel3 = new JPanel();
-		panel3.setLayout(new BoxLayout(panel3,BoxLayout.X_AXIS));
-		JPanel panel4 = new JPanel();
-		panel4.setLayout(new BoxLayout(panel4,BoxLayout.Y_AXIS));
+		JPanel mainBox = new JPanel();
+		mainBox.setLayout(new BoxLayout(mainBox,BoxLayout.Y_AXIS));
+		JPanel topPanel = new JPanel();
+		topPanel.setLayout(new BoxLayout(topPanel,BoxLayout.X_AXIS));
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setLayout(new BoxLayout(bottomPanel,BoxLayout.X_AXIS));
+		JPanel leftPanel = new JPanel();
+		leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.Y_AXIS));
 		
-		panel1.add(panel2);
-		panel1.add(panel3);
-		panel1.add(stateBar);
-		panel2.add(editorPanel);
-		panel2.add(tableSim.getEventPanel());
-		panel2.add(reportsPanel);
-		panel3.add(panel4);
-		panel3.add(mapPanel);
-		panel4.add(tableSim.getVehiclesPanel());
-		panel4.add(tableSim.getRoadsPanel());
-		panel4.add(tableSim.getJunctionsPanel());
+		mainBox.add(topPanel);
+		mainBox.add(bottomPanel);
+		mainBox.add(stateBar);
+		topPanel.add(editorPanel);
+		topPanel.add(tableSim.getEventPanel());
+		topPanel.add(reportsPanel);
+		bottomPanel.add(leftPanel);
+		bottomPanel.add(mapPanel);
+		leftPanel.add(tableSim.getVehiclesPanel());
+		leftPanel.add(tableSim.getRoadsPanel());
+		leftPanel.add(tableSim.getJunctionsPanel());
 		
-		mainPanel.add(panel1);
+		mainPanel.add(mainBox);
 		logger.info("Verificando si hay archivo inicial");
 		if (currentFile != null) {
 			try {
